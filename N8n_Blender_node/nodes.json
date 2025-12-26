@@ -1,0 +1,511 @@
+{
+  "nodes": [
+    {
+      "name": "HTTP Request",
+      "displayName": "HTTP Request",
+      "group": ["regular"],
+      "description": "Makes an HTTP request and returns the response data",
+      "version": 1,
+      "defaults": {
+        "name": "HTTP Request",
+        "requestMethod": "GET",
+        "url": "https://example.com",
+        "options": {}
+      },
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "properties": [
+        {
+          "displayName": "Method",
+          "name": "requestMethod",
+          "type": "options",
+          "options": [
+            {
+              "name": "GET",
+              "value": "GET"
+            },
+            {
+              "name": "POST",
+              "value": "POST"
+            },
+            {
+              "name": "PUT",
+              "value": "PUT"
+            },
+            {
+              "name": "DELETE",
+              "value": "DELETE"
+            }
+          ],
+          "default": "GET"
+        },
+        {
+          "displayName": "URL",
+          "name": "url",
+          "type": "string",
+          "default": "https://example.com"
+        },
+        {
+          "displayName": "Headers",
+          "name": "headers",
+          "type": "json",
+          "default": {}
+        },
+        {
+          "displayName": "Body",
+          "name": "body",
+          "type": "json",
+          "default": {}
+        }
+      ],
+      "api": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "Set",
+      "displayName": "Set",
+      "group": ["transform"],
+      "description": "Sets values for the properties you specify and optionally adds them to the data",
+      "version": 1,
+      "defaults": {
+        "name": "Set",
+        "values": [
+          {
+            "name": "propertyName",
+            "value": "propertyValue"
+          }
+        ]
+      },
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "properties": [
+        {
+          "displayName": "Values to Set",
+          "name": "values",
+          "type": "fixedCollection",
+          "typeOptions": {
+            "multipleValues": true
+          },
+          "default": []
+        }
+      ],
+      "api": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "If",
+      "displayName": "If",
+      "group": ["transform"],
+      "description": "Routes items to different branches based on conditional logic",
+      "version": 1,
+      "defaults": {
+        "name": "If",
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "1",
+              "leftValue": "",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "inputs": ["main"],
+      "outputs": ["main", "main"],
+      "properties": [
+        {
+          "displayName": "Conditions",
+          "name": "conditions",
+          "type": "json",
+          "default": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict"
+            },
+            "conditions": [],
+            "combinator": "and"
+          }
+        }
+      ],
+      "api": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "Switch",
+      "displayName": "Switch",
+      "group": ["transform"],
+      "description": "Routes items to different branches based on defined rules",
+      "version": 1,
+      "defaults": {
+        "name": "Switch",
+        "values": {
+          "dataType": "string",
+          "value1": "",
+          "rules": [
+            {
+              "value2": "",
+              "output": 0
+            }
+          ]
+        }
+      },
+      "inputs": ["main"],
+      "outputs": ["main", "main"],
+      "properties": [
+        {
+          "displayName": "Value to Switch On",
+          "name": "values",
+          "type": "json",
+          "default": {
+            "dataType": "string",
+            "value1": "",
+            "rules": []
+          }
+        }
+      ],
+      "api": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "Merge",
+      "displayName": "Merge",
+      "group": ["transform"],
+      "description": "Merges data from multiple streams into a single stream",
+      "version": 1,
+      "defaults": {
+        "name": "Merge",
+        "mode": "combine",
+        "options": {}
+      },
+      "inputs": ["main", "main"],
+      "outputs": ["main"],
+      "properties": [
+        {
+          "displayName": "Mode",
+          "name": "mode",
+          "type": "options",
+          "options": [
+            {
+              "name": "Combine",
+              "value": "combine",
+              "description": "Combine all input items into a single array"
+            },
+            {
+              "name": "Pass-through",
+              "value": "passThrough",
+              "description": "Pass through items from the first connected input"
+            },
+            {
+              "name": "Keep Only Matches",
+              "value": "keepOnlyMatches",
+              "description": "Keep only items that match across all inputs"
+            },
+            {
+              "name": "Keep Mismatches",
+              "value": "keepMismatches",
+              "description": "Keep only items that don't match across all inputs"
+            }
+          ],
+          "default": "combine"
+        }
+      ],
+      "api": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "Code",
+      "displayName": "Code",
+      "group": ["transform"],
+      "description": "Execute custom JavaScript code",
+      "version": 1,
+      "defaults": {
+        "name": "Code",
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Add your JavaScript code here\nreturn items;"
+      },
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "properties": [
+        {
+          "displayName": "Mode",
+          "name": "mode",
+          "type": "options",
+          "options": [
+            {
+              "name": "Run Once for All Items",
+              "value": "runOnceForAllItems",
+              "description": "Run the code once for all items"
+            },
+            {
+              "name": "Run Once for Each Item",
+              "value": "runOnceForEachItem",
+              "description": "Run the code once for each item"
+            }
+          ],
+          "default": "runOnceForAllItems"
+        },
+        {
+          "displayName": "JavaScript Code",
+          "name": "jsCode",
+          "type": "string",
+          "typeOptions": {
+            "editor": "javascript",
+            "editorLanguage": "javascript"
+          },
+          "default": "// Add your JavaScript code here\nreturn items;"
+        }
+      ],
+      "api": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "Webhook",
+      "displayName": "Webhook",
+      "group": ["trigger", "webhook"],
+      "description": "Starts the workflow when a webhook is called",
+      "version": 1,
+      "defaults": {
+        "name": "Webhook",
+        "path": "webhook",
+        "httpMethod": "POST",
+        "responseMode": "onReceived"
+      },
+      "inputs": [],
+      "outputs": ["main"],
+      "properties": [
+        {
+          "displayName": "Path",
+          "name": "path",
+          "type": "string",
+          "default": "webhook"
+        },
+        {
+          "displayName": "HTTP Method",
+          "name": "httpMethod",
+          "type": "options",
+          "options": [
+            {
+              "name": "GET",
+              "value": "GET"
+            },
+            {
+              "name": "POST",
+              "value": "POST"
+            },
+            {
+              "name": "PUT",
+              "value": "PUT"
+            },
+            {
+              "name": "DELETE",
+              "value": "DELETE"
+            }
+          ],
+          "default": "POST"
+        },
+        {
+          "displayName": "Response Mode",
+          "name": "responseMode",
+          "type": "options",
+          "options": [
+            {
+              "name": "On Received",
+              "value": "onReceived",
+              "description": "Respond immediately when the webhook is received"
+            },
+            {
+              "name": "Last Node",
+              "value": "lastNode",
+              "description": "Wait until the last node has finished before responding"
+            }
+          ],
+          "default": "onReceived"
+        }
+      ],
+      "api": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "Manual Trigger",
+      "displayName": "Manual Trigger",
+      "group": ["trigger"],
+      "description": "Starts the workflow when manually triggered",
+      "version": 1,
+      "defaults": {
+        "name": "Manual Trigger"
+      },
+      "inputs": [],
+      "outputs": ["main"],
+      "properties": [],
+      "api": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "Schedule Trigger",
+      "displayName": "Schedule Trigger",
+      "group": ["trigger"],
+      "description": "Starts the workflow on a specified schedule",
+      "version": 1,
+      "defaults": {
+        "name": "Schedule Trigger",
+        "interval": [
+          {
+            "field": "cronExpression"
+          }
+        ]
+      },
+      "inputs": [],
+      "outputs": ["main"],
+      "properties": [
+        {
+          "displayName": "Rule",
+          "name": "interval",
+          "type": "fixedCollection",
+          "typeOptions": {
+            "multipleValues": false
+          },
+          "default": [
+            {
+              "field": "cronExpression",
+              "cronExpression": "0 0 * * *"
+            }
+          ]
+        }
+      ],
+      "api": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "Function",
+      "displayName": "Function",
+      "group": ["transform"],
+      "description": "Run custom JavaScript code",
+      "version": 1,
+      "defaults": {
+        "name": "Function",
+        "functionCode": "// Add your JavaScript function here\nreturn items;"
+      },
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "properties": [
+        {
+          "displayName": "Function",
+          "name": "functionCode",
+          "type": "string",
+          "typeOptions": {
+            "editor": "javascript",
+            "editorLanguage": "javascript"
+          },
+          "default": "// Add your JavaScript function here\nreturn items;"
+        }
+      ],
+      "api": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "Function Item",
+      "displayName": "Function Item",
+      "group": ["transform"],
+      "description": "Run custom JavaScript code for each item",
+      "version": 1,
+      "defaults": {
+        "name": "Function Item",
+        "itemFunctionCode": "// Add your JavaScript function here\nreturn item;"
+      },
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "properties": [
+        {
+          "displayName": "Function",
+          "name": "itemFunctionCode",
+          "type": "string",
+          "typeOptions": {
+            "editor": "javascript",
+            "editorLanguage": "javascript"
+          },
+          "default": "// Add your JavaScript function here\nreturn item;"
+        }
+      ],
+      "api": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "No Operation",
+      "displayName": "No Operation",
+      "group": ["utility"],
+      "description": "Does nothing and passes the data through unchanged",
+      "version": 1,
+      "defaults": {
+        "name": "No Operation"
+      },
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "properties": [],
+      "api": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "Start",
+      "displayName": "Start",
+      "group": ["utility"],
+      "description": "Start of the workflow",
+      "version": 1,
+      "defaults": {
+        "name": "Start"
+      },
+      "inputs": [],
+      "outputs": ["main"],
+      "properties": [],
+      "api": {
+        "enabled": true
+      }
+    },
+    {
+      "name": "Stop and Error",
+      "displayName": "Stop and Error",
+      "group": ["utility"],
+      "description": "Stops the workflow and returns an error",
+      "version": 1,
+      "defaults": {
+        "name": "Stop and Error",
+        "errorMessage": "An error occurred"
+      },
+      "inputs": ["main"],
+      "outputs": ["main"],
+      "properties": [
+        {
+          "displayName": "Error Message",
+          "name": "errorMessage",
+          "type": "string",
+          "default": "An error occurred"
+        }
+      ],
+      "api": {
+        "enabled": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,228 @@
+{
+  "name": "Blender渲染工作流示例",
+  "nodes": [
+    {
+      "id": "start",
+      "name": "Start",
+      "type": "start",
+      "position": [100, 100],
+      "parameters": {},
+      "description": "工作流开始节点"
+    },
+    {
+      "id": "render_settings",
+      "name": "设置渲染参数",
+      "type": "set",
+      "position": [300, 100],
+      "parameters": {
+        "values": {
+          "render_engine": "CYCLES",
+          "resolution_x": 1920,
+          "resolution_y": 1080,
+          "samples": 128,
+          "file_format": "PNG"
+        }
+      },
+      "description": "设置Blender渲染参数"
+    },
+    {
+      "id": "check_scene",
+      "name": "检查场景",
+      "type": "if",
+      "position": [500, 100],
+      "parameters": {
+        "conditions": {
+          "has_objects": true,
+          "has_light": true,
+          "has_camera": true
+        }
+      },
+      "description": "检查场景是否包含必要的对象"
+    },
+    {
+      "id": "render_scene",
+      "name": "渲染场景",
+      "type": "http_request",
+      "position": [700, 50],
+      "parameters": {
+        "url": "http://localhost:5000/render",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "scene": "{{$json.scene}}",
+          "settings": "{{$json.render_settings}}"
+        }
+      },
+      "description": "通过API调用渲染场景"
+    },
+    {
+      "id": "error_handling",
+      "name": "错误处理",
+      "type": "code",
+      "position": [700, 200],
+      "parameters": {
+        "code": "// 场景不完整时的处理\nconsole.log('场景缺少必要元素，添加默认对象');\nreturn {\n  'default_light': true,\n  'default_camera': true\n};"
+      },
+      "description": "当场景不完整时添加默认对象"
+    },
+    {
+      "id": "save_result",
+      "name": "保存结果",
+      "type": "http_request",
+      "position": [900, 50],
+      "parameters": {
+        "url": "http://localhost:5000/save",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "image": "{{$json.render_result}}",
+          "path": "/renders/output_{{$now}}.png"
+        }
+      },
+      "description": "保存渲染结果到指定路径"
+    },
+    {
+      "id": "notify",
+      "name": "发送通知",
+      "type": "http_request",
+      "position": [1100, 50],
+      "parameters": {
+        "url": "http://localhost:5000/notify",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "message": "渲染完成",
+          "file": "{{$json.saved_path}}"
+        }
+      },
+      "description": "发送渲染完成通知"
+    },
+    {
+      "id": "end",
+      "name": "End",
+      "type": "stop",
+      "position": [1300, 100],
+      "parameters": {},
+      "description": "工作流结束节点"
+    }
+  ],
+  "connections": {
+    "start": {
+      "main": [
+        [
+          {
+            "node": "render_settings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "render_settings": {
+      "main": [
+        [
+          {
+            "node": "check_scene",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "check_scene": {
+      "main": [
+        [
+          {
+            "node": "render_scene",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "error_handling",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "render_scene": {
+      "main": [
+        [
+          {
+            "node": "save_result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "error_handling": {
+      "main": [
+        [
+          {
+            "node": "render_scene",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "save_result": {
+      "main": [
+        [
+          {
+            "node": "notify",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "notify": {
+      "main": [
+        [
+          {
+            "node": "end",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "execution_order": "v1",
+    "save_manual_executions": true,
+    "caller_policy_default_option": "workflows_from_same_owner"
+  },
+  "static_data": null,
+  "pin_data": null,
+  "version_id": "1",
+  "meta": {
+    "template_creds_setup_completed": true,
+    "instanceId": "example_workflow"
+  },
+  "id": "blender_render_workflow",
+  "tags": [
+    {
+      "createdAt": "2023-12-01T00:00:00.000Z",
+      "updatedAt": "2023-12-01T00:00:00.000Z",
+      "id": "1",
+      "name": "Blender"
+    },
+    {
+      "createdAt": "2023-12-01T00:00:00.000Z",
+      "updatedAt": "2023-12-01T00:00:00.000Z",
+      "id": "2",
+      "name": "渲染"
+    }
+  ]
+}

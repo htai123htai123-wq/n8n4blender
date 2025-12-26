@@ -1,0 +1,100 @@
+{
+  "id": "unique_node_id",                     // 节点唯一标识（可选，运行时生成）
+  "type": "node_type_name",                   // 节点类型（如 "Set", "HTTP Request", "Math"）
+  "label": "Display Name",                    // UI 显示名称（可本地化）
+  "category": "Data / AI / Trigger / Flow",   // 节点分类，用于面板组织
+  "description": "简要说明节点功能",           // 帮助文档或悬停提示
+
+  // 📥 输入端口（Input Sockets）
+  "inputs": [
+    {
+      "name": "data",
+      "type": "main | ai_document | binary | ...",  // 数据类型（强类型或弱类型）
+      "required": true,
+      "multiple": false                        // 是否允许多个连接
+    },
+    {
+      "name": "config",
+      "type": "json",
+      "required": false
+    }
+  ],
+
+  // 📤 输出端口（Output Sockets）
+  "outputs": [
+    {
+      "name": "main",
+      "type": "main",
+      "description": "Processed data output"
+    },
+    {
+      "name": "error",
+      "type": "error",
+      "optional": true
+    }
+  ],
+
+  // ⚙️ 参数面板（UI 可配置属性）
+  "parameters": {
+    "operation": {
+      "type": "enum",
+      "options": ["create", "update", "delete"],
+      "default": "create",
+      "label": "Operation"
+    },
+    "url": {
+      "type": "string",
+      "default": "",
+      "placeholder": "https://api.example.com",
+      "label": "API URL"
+    },
+    "headers": {
+      "type": "keyvalue_list",   // 特殊 UI：键值对列表
+      "default": []
+    },
+    "advanced": {
+      "type": "boolean",
+      "default": false,
+      "label": "Show Advanced Options",
+      "displayOptions": {        // 条件显示（类似 Blender 的 attribute toggle）
+        "show": true
+      }
+    }
+  },
+
+  // 🔌 可选：动态参数（基于其他参数值变化）
+  "dynamicParameters": {
+    "dependsOn": ["operation"],
+    "rules": {
+      "create": ["name", "email"],
+      "delete": ["id"]
+    }
+  },
+
+  // 🔐 凭据（如 API Key、OAuth）
+  "credentials": [
+    {
+      "name": "apiToken",
+      "required": true,
+      "type": "api_key | oauth2"
+    }
+  ],
+
+  // 🧩 扩展能力（如 n8n 的 usableAsTool、Blender 的 node groups）
+  "features": {
+    "usableAsTool": true,          // 是否可被 LLM 或其他智能体调用
+    "subgraph": false,             // 是否支持嵌套子图（类似 Node Group）
+    "isTrigger": false             // 是否为触发节点（如 webhook）
+  },
+
+  // 📚 文档与资源
+  "documentation": {
+    "primary": "https://docs.example.com/node-type",
+    "examples": ["example1.json", "example2.json"]
+  },
+
+  // 🖼️ UI 元数据（非功能，仅用于前端）
+  "icon": "icon_name_or_url",
+  "color": "#3f51b5",
+  "position": { "x": 100, "y": 200 }  // 画布位置（可选）
+}

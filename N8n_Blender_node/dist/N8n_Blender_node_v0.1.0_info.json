@@ -1,0 +1,9 @@
+{
+  "name": "N8n_Blender_node",
+  "version": "0.1.0",
+  "filename": "N8n_Blender_node_v0.1.0.zip",
+  "size": 1657198,
+  "created": "2025-12-26T18:35:08.609948",
+  "blender_version_min": "3.5.0",
+  "description": "N8n工作流编辑器Blender插件"
+}
